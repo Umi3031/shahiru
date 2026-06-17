@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Қыз ұзату тойына шақыру</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Great+Vibes&family=Playfair+Display:wght@600;700&display=swap");
+
+    :root {
+      --ink: #17120c;
+      --muted: #695a4d;
+      --paper: #fffdf9;
+      --paper-warm: #fbf3e8;
+      --gold: #9b741d;
+      --gold-soft: #c9a752;
+      --rose: #f6eee7;
+      --shadow: 0 28px 80px rgba(78, 54, 26, 0.22);
+      --serif: "Cormorant Garamond", "Alice", serif;
+      --display: "Playfair Display", Georgia, serif;
+      --script: "Great Vibes", "Cormorant Garamond", cursive;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--serif);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.92), transparent 28rem),
+        linear-gradient(135deg, #efe0cf 0%, #fffaf4 42%, #ead4bb 100%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 24px 14px 42px;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.is-active {
+      display: block;
+    }
+
+    .entry {
+      position: relative;
+      overflow: hidden;
+      min-height: 92vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 18px;
+      border: 1px solid rgba(155, 116, 29, 0.28);
+      background:
+        linear-gradient(rgba(255, 252, 246, 0.72), rgba(255, 252, 246, 0.86)),
+        url("kazakh-invitation-reference.png") center top / cover no-repeat;
+      box-shadow: var(--shadow);
+    }
+
+    .entry::before,
+    .entry::after,
+    .invitation::before,
+    .invitation::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .entry::before {
+      width: 330px;
+      height: 330px;
+      right: -92px;
+      top: -56px;
+      opacity: 0.72;
+      background-image: var(--watercolor-bouquet);
+    }
+
+    .entry::after {
+      width: 260px;
+      height: 260px;
+      left: -92px;
+      bottom: -80px;
+      opacity: 0.34;
+      background-image: var(--rose-watermark);
+    }
+
+    .entry-panel {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 450px);
+      padding: 34px 28px;
+      text-align: center;
+      background: rgba(255, 253, 248, 0.82);
+      border: 1px solid rgba(201, 167, 82, 0.48);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 48px rgba(92, 62, 26, 0.16);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      font-family: var(--script);
+      font-size: clamp(56px, 14vw, 92px);
+      font-weight: 400;
+      line-height: 0.88;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.62);
+    }
+
+    .entry-text {
+      margin: 20px auto 24px;
+      max-width: 320px;
+      color: #4f4135;
+      font-size: 21px;
+      line-height: 1.42;
+    }
+
+    .field-row {
+      display: grid;
+      gap: 12px;
+    }
+
+    .name-input {
+      width: 100%;
+      min-height: 54px;
+      padding: 12px 18px;
+      color: var(--ink);
+      text-align: center;
+      border: 1px solid rgba(155, 116, 29, 0.5);
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.86);
+      outline: 0;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .name-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201, 167, 82, 0.18);
+    }
+
+    .primary-button,
+    .quiet-button {
+      min-height: 48px;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 0;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .primary-button {
+      color: #fff;
+      border: 1px solid #8f6817;
+      background: linear-gradient(135deg, #caaa55, #8d6618);
+      box-shadow: 0 12px 26px rgba(127, 88, 24, 0.24);
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .quiet-button {
+      color: var(--gold);
+      border: 1px solid rgba(155, 116, 29, 0.38);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .primary-button:hover,
+    .quiet-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(127, 88, 24, 0.18);
+    }
+
+    .invitation-shell {
+      display: grid;
+      gap: 16px;
+    }
+
+    .invitation {
+      position: relative;
+      overflow: hidden;
+      width: min(100%, 680px);
+      min-height: 930px;
+      margin: 0 auto;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0) 0 40%, rgba(255, 253, 249, 0.96) 58%, #fffdf9 100%),
+        var(--paper);
+      border: 1px solid rgba(183, 147, 68, 0.36);
+      box-shadow: var(--shadow);
+    }
+
+    .invitation::before {
+      z-index: 2;
+      width: 365px;
+      height: 365px;
+      top: -70px;
+      right: 70px;
+      opacity: 0.9;
+      background-image: var(--watercolor-bouquet);
+    }
+
+    .invitation::after {
+      z-index: 1;
+      width: 420px;
+      height: 420px;
+      left: -160px;
+      bottom: 188px;
+      opacity: 0.28;
+      background-image: var(--rose-watermark);
+    }
+
+    .photo {
+      position: relative;
+      min-height: 455px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 250, 242, 0.32)),
+        url("kazakh-invitation-reference.png") center top / cover no-repeat;
+    }
+
+    .photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, rgba(255, 253, 248, 0.92) 100%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.48) 58%, rgba(255, 255, 255, 0.1));
+    }
+
+    .title-mark {
+      position: absolute;
+      z-index: 3;
+      top: 28px;
+      right: 26px;
+      color: #8f6817;
+      font-family: var(--script);
+      font-size: clamp(58px, 13vw, 92px);
+      font-weight: 400;
+      line-height: 0.82;
+      text-align: right;
+      text-shadow: 0 2px 10px rgba(255, 255, 255, 0.88);
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      margin-top: -92px;
+      padding: 0 36px 42px;
+      text-align: center;
+    }
+
+    .intro {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 30px 20px 14px;
+      background: linear-gradient(180deg, rgba(255, 253, 249, 0.86), rgba(255, 253, 249, 0.42));
+    }
+
+    .guest-line {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: end;
+      gap: 12px;
+      margin: 0 auto 12px;
+      color: #100d09;
+      font-family: var(--display);
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .dot-line {
+      height: 0.62em;
+      border-bottom: 3px dotted #201812;
+      opacity: 0.92;
+    }
+
+    .lead {
+      margin: 0;
+      color: #111;
+      font-family: var(--display);
+      font-size: clamp(28px, 6.1vw, 42px);
+      font-weight: 700;
+      line-height: 1.22;
+    }
+
+    .bride-name {
+      display: block;
+      margin: 8px 0 4px;
+      padding: 8px 0 14px;
+      color: var(--gold);
+      font-family: var(--script);
+      font-size: clamp(46px, 9.4vw, 66px);
+      font-weight: 400;
+      line-height: 1.18;
+      overflow: visible;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
+    }
+
+    .date-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px 18px;
+      margin: 30px auto 28px;
+      color: var(--gold);
+      font-family: var(--display);
+      font-size: clamp(25px, 5.3vw, 40px);
+      font-weight: 700;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+    }
+
+    .date-row span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-inline: 8px;
+      border-inline: 3px solid var(--gold);
+    }
+
+    .venue {
+      margin: 0 0 28px;
+      font-size: clamp(27px, 5.5vw, 39px);
+      line-height: 1.14;
+    }
+
+    .hosts {
+      width: min(100%, 430px);
+      margin: 0 auto;
+      text-align: left;
+      font-size: clamp(25px, 5vw, 36px);
+      line-height: 1.18;
+    }
+
+    .gold-flower {
+      position: absolute;
+      z-index: 2;
+      pointer-events: none;
+      background: var(--line-flower) center / contain no-repeat;
+      opacity: 0.72;
+    }
+
+    .gold-flower.left {
+      width: 210px;
+      height: 286px;
+      left: -18px;
+      bottom: 4px;
+    }
+
+    .gold-flower.right {
+      width: 165px;
+      height: 224px;
+      right: -26px;
+      bottom: 305px;
+      transform: rotate(7deg);
+    }
+
+    .rose-corner {
+      position: absolute;
+      z-index: 1;
+      width: 360px;
+      height: 360px;
+      right: -95px;
+      bottom: -92px;
+      opacity: 0.3;
+      background: var(--rose-watermark) center / contain no-repeat;
+      pointer-events: none;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .share-tools {
+      display: grid;
+      gap: 10px;
+      width: min(100%, 480px);
+      margin: 16px auto 0;
+      padding: 14px;
+      border: 1px solid rgba(155, 116, 29, 0.22);
+      background: rgba(255, 253, 248, 0.68);
+    }
+
+    .share-tools label {
+      color: #5b4c3d;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .share-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .share-output {
+      min-width: 0;
+      padding: 11px 12px;
+      color: #3f3328;
+      border: 1px solid rgba(155, 116, 29, 0.28);
+      background: rgba(255, 255, 255, 0.86);
+      font-size: 14px;
+    }
+
+    .mini-button {
+      min-height: 42px;
+      padding: 9px 14px;
+      color: #fff;
+      cursor: pointer;
+      border: 1px solid #8f6817;
+      border-radius: 0;
+      background: linear-gradient(135deg, #caaa55, #8d6618);
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status {
+      min-height: 20px;
+      margin: 0;
+      color: var(--gold);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .hint {
+      margin: 0;
+      color: rgba(82, 61, 36, 0.72);
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .is-shaking {
+      animation: shake 320ms ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding: 0;
+      }
+
+      .entry,
+      .invitation {
+        min-height: 100vh;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .entry-panel {
+        padding: 30px 22px;
+      }
+
+      .photo {
+        min-height: 415px;
+      }
+
+      .content {
+        margin-top: -82px;
+        padding: 0 18px 34px;
+      }
+
+      .intro {
+        padding-inline: 8px;
+      }
+
+      .guest-line {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .dot-line {
+        display: none;
+      }
+
+      .hosts {
+        width: min(100%, 330px);
+      }
+
+      .share-row {
+        grid-template-columns: 1fr;
+      }
+
+      .gold-flower.left {
+        width: 155px;
+        height: 212px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: 680px 930px;
+        margin: 0;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .page {
+        width: 680px;
+        padding: 0;
+      }
+
+      .entry,
+      .actions,
+      .hint {
+        display: none !important;
+      }
+
+      .step {
+        display: block !important;
+      }
+
+      .invitation {
+        box-shadow: none;
+        border: 0;
+      }
+    }
+
+    body {
+      --rose-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cg fill='none' stroke='%23ead7c4' stroke-width='10' opacity='.72'%3E%3Cpath d='M205 80c56 18 86 62 78 112-10 63-73 103-135 82-62-21-92-86-65-142 23-48 75-70 122-52Z'/%3E%3Cpath d='M197 105c38 9 64 38 60 75-5 44-49 76-94 62-46-14-70-61-52-103 16-35 51-48 86-34Z'/%3E%3Cpath d='M194 135c22 5 39 23 37 44-3 27-30 46-58 37-27-9-40-37-30-61 9-19 29-26 51-20Z'/%3E%3Cpath d='M197 164c10 1 18 10 17 20-1 12-13 20-24 16-12-4-17-16-12-26 4-8 11-11 19-10Z'/%3E%3Cpath d='M84 212c-38 23-60 57-64 104 48-14 86-38 118-74M282 212c43 25 72 63 83 113-55-12-99-38-132-79'/%3E%3C/g%3E%3C/svg%3E");
+      --line-flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 250'%3E%3Cg fill='none' stroke='%23b58b28' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M33 237c33-65 54-126 51-197'/%3E%3Cpath d='M54 184c-19-11-33-28-41-51 27 1 46 12 57 34M82 144c26-15 48-36 65-64-36 2-61 16-76 43M71 91c-20-11-32-28-39-52 28 2 46 13 56 34'/%3E%3Cpath d='M94 67c-11-23-8-43 9-60 18 18 21 38 7 61M111 120c-8-25-1-46 21-63 16 24 15 46-5 66M52 205c-23 2-41 12-53 31 27 7 49 2 67-15'/%3E%3Cpath d='M111 122c25-11 46-8 64 9-19 19-42 24-69 12M62 165c-15 20-35 29-61 27 8-27 25-43 51-48'/%3E%3C/g%3E%3C/svg%3E");
+      --watercolor-bouquet: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 360'%3E%3Cg opacity='.95'%3E%3Cpath fill='%23efe2da' d='M170 42c51-12 99 21 106 72 7 55-34 103-90 105-61 2-108-49-96-107 7-35 37-62 80-70Z'/%3E%3Cpath fill='%23f7eee9' d='M92 120c35-33 87-28 112 10 27 41 9 96-37 116-50 22-105-9-114-61-5-28 9-51 39-65Z'/%3E%3Cpath fill='%23ded3cc' d='M218 128c43-13 82 8 95 49 13 43-10 86-52 97-47 12-91-19-96-65-3-32 15-67 53-81Z'/%3E%3Cpath fill='%23f9f2ef' d='M162 92c29 4 51 27 49 57-2 33-29 58-63 55-36-4-59-37-49-70 8-27 32-46 63-42Z'/%3E%3Cpath fill='%23dcc9bf' d='M164 118c16 4 27 18 24 34-3 18-20 30-38 25-19-5-29-24-22-42 6-14 20-21 36-17Z'/%3E%3Cg fill='%23809077' opacity='.58'%3E%3Cellipse cx='78' cy='91' rx='13' ry='36' transform='rotate(-42 78 91)'/%3E%3Cellipse cx='277' cy='91' rx='12' ry='34' transform='rotate(39 277 91)'/%3E%3Cellipse cx='292' cy='228' rx='11' ry='36' transform='rotate(-58 292 228)'/%3E%3Cellipse cx='98' cy='253' rx='12' ry='32' transform='rotate(45 98 253)'/%3E%3C/g%3E%3Cg fill='%23b8987b' opacity='.48'%3E%3Ccircle cx='58' cy='143' r='8'/%3E%3Ccircle cx='72' cy='162' r='5'/%3E%3Ccircle cx='309' cy='145' r='7'/%3E%3Ccircle cx='296' cy='170' r='5'/%3E%3Ccircle cx='130' cy='46' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="step is-active" id="entryStep" aria-label="Зочны нэр оруулах хэсэг">
+      <div class="entry">
+        <form class="entry-panel" id="inviteForm">
+          <p class="eyebrow">29 маусым • сағат 14:00</p>
+          <h1>Қыз<br>ұзату</h1>
+          <p class="entry-text">Айкүмістің қыз ұзату тойына арналған шақыртуды көру үшін аты-жөніңізді енгізіңіз.</p>
+          <div class="field-row">
+            <input class="name-input" id="guestName" name="guestName" type="text" placeholder="Құрметті қонақтың аты" maxlength="48" autocomplete="name" required>
+            <button class="primary-button" type="submit">шақырту көру</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="step" id="inviteStep" aria-label="Қыз ұзату тойының шақыруы">
+      <div class="invitation-shell">
+        <article class="invitation" id="invitationCard">
+          <div class="photo">
+            <div class="title-mark">Қыз<br>ұзату</div>
+          </div>
+
+          <div class="content">
+            <div class="intro">
+              <div class="guest-line">
+                <span>Құрметті</span>
+                <span class="dot-line" aria-hidden="true"></span>
+                <span id="displayName">қонақ</span>
+                <span>Сіздерді</span>
+              </div>
+
+              <p class="lead">
+                аяулы қызымыз
+                <span class="bride-name">Айкүмістің</span>
+                ұзату тойына арналған ақ дастарханымыздың қадірлі қонағы болуға шақырамыз!
+              </p>
+            </div>
+
+            <div class="date-row" aria-label="Той уақыты">
+              <span>29 маусым</span>
+              <span>сағат 14:00</span>
+            </div>
+
+            <p class="venue">Мекенжайы: «Жалын»<br>тойханасы</p>
+
+            <div class="hosts">
+              <p><strong>Той иелері:</strong><br>Апасы: Мұтай<br>Ата-анасы: Базархан, Мәуле</p>
+            </div>
+          </div>
+
+          <span class="gold-flower left" alice-hidden="true"></span>
+          <span class="gold-flower right" alice-hidden="true"></span>
+          <span class="rose-corner" alice-hidden="true"></span>
+        </article>
+
+        <div class="actions">
+          <button class="primary-button" type="button" id="printButton">PDF хадгалах</button>
+          <button class="quiet-button" type="button" id="shareButton">Урилга хуваалцах</button>
+          <button class="quiet-button" type="button" id="backButton">Буцах</button>
+        </div>
+        <div class="share-tools" aria-label="Нэртэй холбоос үүсгэх">
+          <label for="shareUrl">Энэ урилгыг интернетэд байршуулсны дараа доорх холбоосыг тухайн хүнд явуулбал нэр нь автоматаар гарна.</label>
+          <div class="share-row">
+            <input class="share-output" id="shareUrl" type="text" readonly value="">
+            <button class="mini-button" type="button" id="copyLinkButton">Хуулах</button>
+          </div>
+          <p class="status" id="copyStatus" aria-live="polite"></p>
+        </div>
+        <p class="hint">PDF хадгалах товч нь хэвлэх цонх нээнэ. Destination хэсгээс “Save as PDF” сонгоно.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#inviteForm");
+    const entryStep = document.querySelector("#entryStep");
+    const inviteStep = document.querySelector("#inviteStep");
+    const guestInput = document.querySelector("#guestName");
+    const displayName = document.querySelector("#displayName");
+    const printButton = document.querySelector("#printButton");
+    const shareButton = document.querySelector("#shareButton");
+    const backButton = document.querySelector("#backButton");
+    const shareUrl = document.querySelector("#shareUrl");
+    const copyLinkButton = document.querySelector("#copyLinkButton");
+    const copyStatus = document.querySelector("#copyStatus");
+
+    function getNameFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const queryName = params.get("name");
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      return normalizeName(queryName || hashParams.get("name") || "");
+    }
+
+    function showStep(step) {
+      entryStep.classList.toggle("is-active", step === "entry");
+      inviteStep.classList.toggle("is-active", step === "invite");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function normalizeName(value) {
+      return value.trim().replace(/\s+/g, " ");
+    }
+
+    function invitationUrl(name) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("name", name);
+      url.hash = "";
+      return url.toString();
+    }
+
+    function setGuestName(name) {
+      displayName.textContent = name;
+      shareUrl.value = invitationUrl(name);
+      document.title = `${name} - Қыз ұзату тойына шақыру`;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      shareUrl.select();
+      document.execCommand("copy");
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = normalizeName(guestInput.value);
+
+      if (!name) {
+        guestInput.classList.remove("is-shaking");
+        void guestInput.offsetWidth;
+        guestInput.classList.add("is-shaking");
+        guestInput.focus();
+        return;
+      }
+
+      setGuestName(name);
+      showStep("invite");
+    });
+
+    backButton.addEventListener("click", () => {
+      showStep("entry");
+      guestInput.focus();
+    });
+
+    printButton.addEventListener("click", () => {
+      window.print();
+    });
+
+    shareButton.addEventListener("click", async () => {
+      const text = shareUrl.value || invitationUrl(displayName.textContent);
+
+      if (navigator.share) {
+        await navigator.share({
+          title: "Қыз ұзату тойына шақыру",
+          text: "Сізге арналған қыз ұзату тойының шақыруы",
+          url: text
+        });
+        return;
+      }
+
+      await copyText(text);
+      copyStatus.textContent = "Холбоос хуулагдлаа.";
+    });
+
+    copyLinkButton.addEventListener("click", async () => {
+      await copyText(shareUrl.value);
+      copyStatus.textContent = "Холбоос хуулагдлаа.";
+    });
+
+    const urlName = getNameFromUrl();
+    if (urlName) {
+      guestInput.value = urlName;
+      setGuestName(urlName);
+      showStep("invite");
+    }
+  </script>
+</body>
+</html>
